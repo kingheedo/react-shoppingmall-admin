@@ -54,7 +54,7 @@ const MainPageLayout = () => {
             </NavLink>
           </li>
           <li>
-            <NavLink to={'/addProduct'}>
+            <NavLink to={'/add'}>
               <PostAddIcon />
               <span>
                   Add Product
