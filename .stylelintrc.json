@@ -1,0 +1,21 @@
+{
+  "extends": ["stylelint-config-standard", "stylelint-config-recess-order"],
+  "plugins": [
+    "stylelint-scss",
+    "stylelint-order"
+  ],
+  "overrides": [
+    {
+      "files": [
+        "**/*.scss"
+      ]
+    }
+  ],
+  "rules": {
+    "at-rule-no-unknown": null,
+    "indentation": 2,
+    "block-opening-brace-space-before": "always",
+    "color-function-notation": "legacy",
+    "import-notation": "string"
+  }
+}
