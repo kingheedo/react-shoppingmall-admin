@@ -1,0 +1,46 @@
+.main-page {
+  table {
+    table-layout: fixed;
+    thead {
+      tr {
+        background: #f3f3f3;
+        th {
+          height: 48px;
+          padding: 8px;
+          border: 1px solid #e3e3e3;
+          text-align: center;
+          white-space: nowrap;
+        }
+      }
+    }
+    tbody {
+      tr {
+        td {
+          height: 48px;
+          padding: 8px;
+          text-align: center;
+          border: 1px solid #e3e3e3;
+          white-space: nowrap;
+          @mixin edit-btn($backgroundColor) {
+            display: inline-flex;
+            align-items: center;
+            border-radius: 4px;
+            padding: 4px 6px;
+            background-color: $backgroundColor;
+            color: #fff;
+            &:not(:last-of-type) {
+              margin-right: 6px;
+            }
+          }
+          .edit-btn {
+            @include edit-btn(#5fc7df);
+          }
+
+          .delete-btn {
+            @include edit-btn(#e5534e);
+          }
+        }
+      }
+    }
+  }
+}

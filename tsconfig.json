@@ -33,6 +33,7 @@
       "config/*": ["config/*"],
       "context/*": ["context/*"],
       "store/*": ["store/*"],
+      "layout/*": ["layout/*"],
     }
   },
   "include": ["src"],

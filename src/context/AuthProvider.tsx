@@ -27,9 +27,6 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
     }
   }, [isSuccess, userInfo]);
   
-  console.log('userInfo',userInfo);
-  console.log('getUserState',getUserState);
-
   return (
     <AuthContext.Provider value={userInfo}>
       {!getUserState?.id && <SignInModal />}

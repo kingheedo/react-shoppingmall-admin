@@ -1,12 +1,14 @@
 import MainPageLayout from 'layout';
 import AddProductPage from 'pages/AddProductPage';
+import MainPage from 'pages/MainPage';
 import { Route, Routes } from 'react-router-dom';
 
 const RootRoutes = () => {
   return (
     <Routes>
-      <Route path="/" element={<MainPageLayout />}>
-        <Route index path="/add" element={<AddProductPage />} />
+      <Route element={<MainPageLayout />}>
+        <Route index path= "/" element={<MainPage />} />
+        <Route path="/add" element={<AddProductPage />} />
       </Route>
     </Routes>
   );
