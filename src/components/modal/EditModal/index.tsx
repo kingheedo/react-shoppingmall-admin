@@ -1,6 +1,9 @@
 import { TargetType } from 'pages/MainPage';
 import './index.scss';
 import ProductForm from 'components/ProductForm';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import apis from 'apis/index';
+import { PatchProductReq } from 'apis/product/schema';
 
 interface IEditModalProps{
   item: TargetType;
@@ -11,14 +14,29 @@ const EditModal = ({
   item,
   onClose
 }: IEditModalProps) => {
-
-  console.log('item',item);
+  const queryClient = useQueryClient();
+  const { mutate: editProduct } = useMutation({
+    mutationFn: (data: PatchProductReq) => apis.Product.patchProduct(data),
+    onSuccess: async(data) => {
+      alert(data);
+      await queryClient.invalidateQueries({
+        queryKey: ['getProducts']
+      });
+      await onClose();
+    }
+  });
   
   return (
     <div onClick={onClose} className="edit-modal-bg">
       <div onClick={e => e.stopPropagation()} className="edit-modal-content">
         <ProductForm 
           item={item}
+          onSumbit={(data) => editProduct({
+            ...data,
+            price: Number(data.price),
+            stock: Number(data.stock),
+            sex: Number(data.sex)
+          })}
         />
       </div>
     </div>

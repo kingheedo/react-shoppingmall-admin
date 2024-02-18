@@ -4,9 +4,11 @@ import './index.scss';
 import apis from 'apis/index';
 import { useMutation } from '@tanstack/react-query';
 import backUrl from 'config/backUrl';
+import classNames from 'classnames';
+import { AddProductReq, PatchProductReq } from 'apis/product/schema';
 
 type InputValType = {
-  id?: number;
+  id: number;
   productName: string;
   price: number;
   stock: number;
@@ -19,10 +21,12 @@ const sizeList = ['SM', 'M', 'L', 'XL'];
 
 interface IProductFormProps{
   item?: InputValType
+  onSumbit: (data: PatchProductReq & AddProductReq) => void;
 }
 
 const ProductForm = ({
-  item
+  item,
+  onSumbit
 }: IProductFormProps) => {
   const inputFileRef = useRef<HTMLInputElement | null>(null);
   const formData = new FormData();
@@ -35,6 +39,7 @@ const ProductForm = ({
     stock: item?.stock || 0,
     sex: item?.sex === 0 ? 0 : item?.sex || -1
   });
+  
   /** 상품이미지 업로드 api */
   const { mutate: addProductImage } = useMutation({
     mutationFn: () => apis.Product.addProductImage(formData),
@@ -45,24 +50,7 @@ const ProductForm = ({
       });
     }
   });
-  /** 상품 등록 api */
-  const { mutate: addProduct } = useMutation({
-    mutationFn: () => apis.Product.addProduct(inputVal),
-    onSuccess: () => {
-      alert('상품 등록 완료');
-    },
-    onSettled: () => {
-      setInputVal({
-        productName: '',
-        price: 0,
-        sizes: [],
-        images: [],
-        stock: 0,
-        sex: -1
-      });      
-    }
-  });
-  
+
   /** 폼 제출시 */
   const handleOnSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -73,7 +61,9 @@ const ProductForm = ({
       || inputVal.stock === 0) {
       return;
     }
-    addProduct();
+    /** props의 submit 함수 실행 */
+    onSumbit(inputVal);
+    
   };
 
   /** 등록 버튼 클릭 시 */
@@ -103,12 +93,29 @@ const ProductForm = ({
           ? inputVal.sizes.filter(size => size !== e.target.value) 
           : [...inputVal.sizes, e.target.value]
       });
-    } else {
+
+      return;
+    } 
+    if (e.target.name === 'price' || e.target.name === 'stock') {
       setInputVal({
         ...inputVal,
-        [e.target.name]: e.target.value
+        [e.target.name]: e.target.value.replace(/[^\d]/g, '')
       });
-    }
+      
+      return;
+    } 
+    setInputVal({
+      ...inputVal,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  /** 이미지 클릭 시
+   * 
+   * 1. 이미지 대상 선택(삭제대상 선택가능)
+   */
+  const onClickImage = (payload: number) => {
+    // 
   };
   
   console.log('inputVal',inputVal);
@@ -173,7 +180,7 @@ const ProductForm = ({
               id="stock"
               name="stock"
               min={1}
-              type="number" 
+              type="text" 
               value={inputVal.stock || ''}
               onChange={onChangeInput}
             />
@@ -190,7 +197,7 @@ const ProductForm = ({
                 id="woman"
                 type="radio" 
                 name="sex"
-                value="woman"
+                value={0}
                 defaultChecked={inputVal.sex === 0}
                 onChange={onChangeInput}
               />
@@ -201,7 +208,7 @@ const ProductForm = ({
                 id="man"
                 type="radio" 
                 name="sex"
-                value="man"
+                value={1}
                 defaultChecked={inputVal.sex === 1}
                 onChange={onChangeInput}
               />
@@ -213,9 +220,18 @@ const ProductForm = ({
               상품이미지 등록
           </label>
           <div className="input-wrap">
-            <div className="img-wrap">
-              {inputVal.images.length > 0 ? <img src={`${backUrl}/${inputVal.images[0]}`} /> : <UploadFileIcon fontSize="large" />}
-              {inputVal.images.length > 1 && <img src={`${backUrl}/${inputVal.images[1]}`} /> }
+            <div className={classNames('img-wrap', inputVal.images.length > 0 && 'exist')}>
+              {inputVal.images.length > 0 ? (
+                <img 
+                  onClick={() => onClickImage(0)} 
+                  src={`${backUrl}/${inputVal.images[0]}`} />
+              ) : <UploadFileIcon fontSize="large" 
+              />}
+              {inputVal.images.length > 1 && (
+                <img 
+                  onClick={() => onClickImage(1)} 
+                  src={`${backUrl}/${inputVal.images[1]}`} />
+              ) }
               <button type="button" onClick={onClickEnroll}>등록</button>
             </div>
             <p>
