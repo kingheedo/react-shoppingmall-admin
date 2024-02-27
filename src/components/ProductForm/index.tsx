@@ -1,11 +1,10 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import './index.scss';
-import apis from 'apis/index';
-import { useMutation } from '@tanstack/react-query';
 import backUrl from 'config/backUrl';
 import classNames from 'classnames';
 import { AddProductReq, PatchProductReq } from 'apis/product/schema';
+import useFormData from 'hooks/useFormData';
 
 type InputValType = {
   id: number;
@@ -28,8 +27,6 @@ const ProductForm = ({
   item,
   onSumbit
 }: IProductFormProps) => {
-  const inputFileRef = useRef<HTMLInputElement | null>(null);
-  const formData = new FormData();
   const [inputVal, setInputVal] = useState<InputValType>({
     id: item?.id || -1,
     productName: item?.productName || '',
@@ -39,18 +36,10 @@ const ProductForm = ({
     stock: item?.stock || 0,
     sex: item?.sex === 0 ? 0 : item?.sex || -1
   });
-  
-  /** 상품이미지 업로드 api */
-  const { mutate: addProductImage } = useMutation({
-    mutationFn: () => apis.Product.addProductImage(formData),
-    onSuccess: (data) => {
-      setInputVal({
-        ...inputVal,
-        images: [...data]
-      });
-    }
-  });
 
+  const { inputFileRef: inputFileRef1, onClickSubmit: onClickSubmit1, onChangeFile: onChangeFile1 } = useFormData();
+  const { inputFileRef: inputFileRef2, onClickSubmit: onClickSubmit2, onChangeFile: onChangeFile2 } = useFormData();
+  
   /** 폼 제출시 */
   const handleOnSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -64,24 +53,6 @@ const ProductForm = ({
     /** props의 submit 함수 실행 */
     onSumbit(inputVal);
     
-  };
-
-  /** 등록 버튼 클릭 시 */
-  const onClickEnroll = () => {
-    inputFileRef.current?.click();
-  };
-
-  /** 파일 이미지 선택 시 */
-  const onChangeFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const firstImage = e.currentTarget.files?.[0];
-    const secondImage = e.currentTarget.files?.[1];
-    if (!firstImage || !secondImage) {
-      return;
-    }
-    formData.append('image', firstImage);
-    formData.append('image', secondImage);
-
-    addProductImage();
   };
 
   /** input 핸들러 */
@@ -109,20 +80,12 @@ const ProductForm = ({
       [e.target.name]: e.target.value
     });
   };
-
-  /** 이미지 클릭 시
-   * 
-   * 1. 이미지 대상 선택(삭제대상 선택가능)
-   */
-  const onClickImage = (payload: number) => {
-    // 
-  };
   
   console.log('inputVal',inputVal);
   
   return (
     <div className="product-form">
-      <form onSubmit={handleOnSubmit}>
+      <form onSubmit={handleOnSubmit} encType="multipart/form-data">
         <div className="list-wrap">
           <label htmlFor="name">
             상품명
@@ -220,29 +183,61 @@ const ProductForm = ({
               상품이미지 등록
           </label>
           <div className="input-wrap">
-            <div className={classNames('img-wrap', inputVal.images.length > 0 && 'exist')}>
-              {inputVal.images.length > 0 ? (
-                <img 
-                  onClick={() => onClickImage(0)} 
-                  src={`${backUrl}/${inputVal.images[0]}`} />
-              ) : <UploadFileIcon fontSize="large" 
-              />}
-              {inputVal.images.length > 1 && (
-                <img 
-                  onClick={() => onClickImage(1)} 
-                  src={`${backUrl}/${inputVal.images[1]}`} />
-              ) }
-              <button type="button" onClick={onClickEnroll}>등록</button>
+            <div className={classNames('img-container', inputVal.images.length > 0 && 'exist')}>
+              {<div className="img-frame">
+                {inputVal.images[0] ? (
+                  <img
+                    src={`${backUrl}/${inputVal.images[0]}`} />
+                ) : (
+                  <UploadFileIcon fontSize="large" />
+                )}
+                <button type="button" onClick={onClickSubmit1}>등록</button>
+              </div>
+              }
+              {<div className="img-frame">
+                {inputVal.images[1] ? (
+                  <img
+                    src={`${backUrl}/${inputVal.images[1]}`} />
+                ) : (
+                  <UploadFileIcon fontSize="large" />
+                )}
+                <button type="button" onClick={onClickSubmit2}>등록</button>
+              </div>
+              }
             </div>
             <p>
               - 쇼핑몰에 기본으로 보여지는 상품이미지를 등록합니다.
             </p>
             <input 
-              ref={inputFileRef}
+              ref={inputFileRef1}
               type="file"
               name={'image'}
               accept="image/*"
-              onChange={onChangeFile}
+              multiple
+              onChange={(e) => onChangeFile1(e).then(res => {
+                if (res) {
+                  setInputVal({
+                    ...inputVal,
+                    images: [res, inputVal.images[1]]
+                  });
+                }
+              }
+              )}
+            />
+            <input 
+              ref={inputFileRef2}
+              type="file"
+              name={'image'}
+              accept="image/*"
+              multiple
+              onChange={(e) => onChangeFile2(e).then(res => {
+                if (res) {
+                  setInputVal({
+                    ...inputVal,
+                    images: [inputVal.images[0], res]
+                  });
+                }
+              })}
             />
           </div>
         </div>

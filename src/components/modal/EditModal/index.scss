@@ -14,5 +14,23 @@
     width: 900px;
     background: #fff;
     padding: 10px;
+
+    .product-form {
+      form {
+        .list-wrap {
+          &.img {
+            .input-wrap {
+              .img-container {
+                &.exist {
+                  .img-frame {
+                    outline: 1px solid #adadad;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }

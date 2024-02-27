@@ -11,7 +11,7 @@ const AuthContext = createContext<GetUserRes | null>(null);
 const AuthProvider = ({ children }: PropsWithChildren) => {
   const location = useLocation();
   const [getUserState, setLoginState] = useRecoilState(UserState);
-  const { data: getUser, isSuccess } = useQuery({
+  const { data: getUser, isError, isRefetchError } = useQuery({
     queryKey: ['getUser', location.pathname],
     queryFn: () => apis.User.getUser()
   });
@@ -21,11 +21,11 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
   },[getUser]);
 
   useEffect(() => {
-    if (isSuccess && !userInfo?.id) {
+    if ((isError || isRefetchError) && !userInfo?.id) {
       setLoginState(null);
 
     }
-  }, [isSuccess, userInfo]);
+  }, [isError,isRefetchError, userInfo]);
   
   return (
     <AuthContext.Provider value={userInfo}>

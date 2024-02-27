@@ -22,13 +22,13 @@ const EditModal = ({
       await queryClient.invalidateQueries({
         queryKey: ['getProducts']
       });
-      await onClose();
+      onClose();
     }
   });
   
   return (
-    <div onClick={onClose} className="edit-modal-bg">
-      <div onClick={e => e.stopPropagation()} className="edit-modal-content">
+    <div onMouseDown={onClose} className="edit-modal-bg">
+      <div onMouseDown={e => e.stopPropagation()} className="edit-modal-content">
         <ProductForm 
           item={item}
           onSumbit={(data) => editProduct({

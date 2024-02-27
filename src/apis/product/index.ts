@@ -8,7 +8,7 @@ const getProducts = () => {
 
 /** 상품 이미지 추가하기 */
 const addProductImage = (data:AddProductImageReq) => {
-  return request.post<AddProductImageRes>('/admin/product/images',data).then(res => res.data);
+  return request.post<AddProductImageRes>('/admin/product/images',data, { headers: { 'Content-Type': 'multipart/form-data' } }).then(res => res.data);
 };
 
 /** 상품 추가하기 */

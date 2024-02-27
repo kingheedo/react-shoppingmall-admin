@@ -7,7 +7,7 @@ type ProductType = {
 }
 
 export type AddProductImageReq = FormData;
-export type AddProductImageRes = string[];
+export type AddProductImageRes = string;
 
 export type AddProductReq = Omit<ProductType, 'id'> & {
   images: string[];

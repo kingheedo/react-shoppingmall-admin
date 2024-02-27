@@ -27,7 +27,9 @@ export default defineConfig({
       { find: 'config', replacement: path.resolve('./src/config') },
       { find: 'context', replacement: path.resolve('./src/context') },
       { find: 'store', replacement: path.resolve('./src/store') },
-      { find: 'layout', replacement: path.resolve('./src/layout') }
+      { find: 'layout', replacement: path.resolve('./src/layout') },
+      { find: 'hooks', replacement: path.resolve('./src/hooks') },
+      { find: 'utils', replacement: path.resolve('./src/utils') }
     ]
   }
 });

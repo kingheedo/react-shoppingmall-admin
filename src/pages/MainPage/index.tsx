@@ -51,8 +51,6 @@ const MainPage = () => {
       });
     }
   };
-  console.log('target',target);
-  console.log('productList',productList);
   
   return (
     <div className="main-page">
