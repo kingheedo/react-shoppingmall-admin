@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import './index.scss';
-import backUrl from 'config/backUrl';
 import classNames from 'classnames';
 import { AddProductReq, PatchProductReq } from 'apis/product/schema';
 import useFormData from 'hooks/useFormData';
