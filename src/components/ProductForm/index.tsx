@@ -187,7 +187,7 @@ const ProductForm = ({
               {<div className="img-frame">
                 {inputVal.images[0] ? (
                   <img
-                    src={`${backUrl}/${inputVal.images[0]}`} />
+                    src={`${inputVal.images[0]}`} />
                 ) : (
                   <UploadFileIcon fontSize="large" />
                 )}
@@ -197,7 +197,7 @@ const ProductForm = ({
               {<div className="img-frame">
                 {inputVal.images[1] ? (
                   <img
-                    src={`${backUrl}/${inputVal.images[1]}`} />
+                    src={`${inputVal.images[1]}`} />
                 ) : (
                   <UploadFileIcon fontSize="large" />
                 )}
