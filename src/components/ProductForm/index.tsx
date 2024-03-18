@@ -217,7 +217,7 @@ const ProductForm = ({
                 if (res) {
                   setInputVal({
                     ...inputVal,
-                    images: [res, inputVal.images[1]]
+                    images: [...res, inputVal.images[1]].flat()
                   });
                 }
               }
@@ -233,7 +233,7 @@ const ProductForm = ({
                 if (res) {
                   setInputVal({
                     ...inputVal,
-                    images: [inputVal.images[0], res]
+                    images: [inputVal.images[0], ...res].flat()
                   });
                 }
               })}
