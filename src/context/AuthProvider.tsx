@@ -21,11 +21,11 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
   },[getUser]);
 
   useEffect(() => {
-    if ((isError || isRefetchError) && !userInfo?.id) {
+    if (!getUser || isError || isRefetchError) {
       setLoginState(null);
 
     }
-  }, [isError,isRefetchError, userInfo]);
+  }, [isError,isRefetchError, getUser]);
   
   return (
     <AuthContext.Provider value={userInfo}>
