@@ -5,8 +5,9 @@ import { useState } from 'react';
 import EditModal from 'components/modal/EditModal';
 import { useQuery } from '@tanstack/react-query';
 import apis from 'apis/index';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { UserState } from 'store/index';
+import axios from 'axios';
 
 export type TargetType = {
   id: number;
@@ -30,10 +31,18 @@ const targetInit = {
 
 const MainPage = () => {
   const [target, setTarget] = useState<TargetType>(targetInit);
-  const getUserState = useRecoilValue(UserState);
+  const [getUserState, setLoginState] = useRecoilState(UserState);
   const { data: productList } = useQuery({
     queryKey: ['getProducts'],
-    queryFn: () => apis.Product.getProducts(),
+    queryFn: async() => {
+      try {
+        return await apis.Product.getProducts();
+      } catch (error) {
+        if (axios.isAxiosError(error) && error.response?.status === 401) {
+          setLoginState(null);
+        }
+      }
+    },
     enabled: !!getUserState?.id
   });
 
