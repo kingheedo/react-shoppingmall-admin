@@ -15,7 +15,7 @@ const EditModal = ({
   onClose
 }: IEditModalProps) => {
   const queryClient = useQueryClient();
-  const { mutate: editProduct } = useMutation({
+  const { mutate: editProduct, isSuccess } = useMutation({
     mutationFn: (data: PatchProductReq) => apis.Product.patchProduct(data),
     onSuccess: async(data) => {
       alert(data);
@@ -30,6 +30,7 @@ const EditModal = ({
     <div onMouseDown={onClose} className="edit-modal-bg">
       <div onMouseDown={e => e.stopPropagation()} className="edit-modal-content">
         <ProductForm 
+          isSuccess={isSuccess}
           item={item}
           onSumbit={(data) => editProduct({
             ...data,
