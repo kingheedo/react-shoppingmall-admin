@@ -1,5 +1,14 @@
 import request from 'apis/request';
-import { AddProductImageReq, AddProductImageRes, AddProductReq, AddProductRes, GetProductsRes, PatchProductReq, PatchProductRes } from './schema';
+import { AddProductImageReq,
+  AddProductImageRes,
+  AddProductReq,
+  AddProductRes,
+  GetProductsRes,
+  PatchProductReq,
+  PatchProductRes,
+  RemoveProductReq,
+  RemoveProductRes
+} from './schema';
 
 /** 상품정보들 가져오기 */
 const getProducts = () => {
@@ -21,9 +30,15 @@ const patchProduct = (data: PatchProductReq) => {
   return request.patch<PatchProductRes>('admin/product',data).then(res => res.data);
 };
 
+/** 상품 삭제 */
+const removeProduct = (data: RemoveProductReq) => {
+  return request.delete<RemoveProductRes>(`admin/product/${data}`).then(res => res.data);
+};
+
 export default {
   getProducts,
   addProductImage,
   addProduct,
-  patchProduct
+  patchProduct,
+  removeProduct
 };

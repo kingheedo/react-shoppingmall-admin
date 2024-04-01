@@ -3,11 +3,12 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useState } from 'react';
 import EditModal from 'components/modal/EditModal';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import apis from 'apis/index';
 import { useRecoilState } from 'recoil';
 import { UserState } from 'store/index';
 import axios from 'axios';
+import { RemoveProductReq } from 'apis/product/schema';
 
 export type TargetType = {
   id: number;
@@ -32,6 +33,7 @@ const targetInit = {
 const MainPage = () => {
   const [target, setTarget] = useState<TargetType>(targetInit);
   const [getUserState, setLoginState] = useRecoilState(UserState);
+  const queryClient = useQueryClient();
   const { data: productList } = useQuery({
     queryKey: ['getProducts'],
     queryFn: async() => {
@@ -44,6 +46,19 @@ const MainPage = () => {
       }
     },
     enabled: !!getUserState?.id
+  });
+
+  const { mutate: removeProduct } = useMutation({
+    mutationFn: (data: RemoveProductReq) => apis.Product.removeProduct(data),
+    onSuccess: () => {
+      alert('상품이 삭제되었습니다');
+      queryClient.invalidateQueries({
+        queryKey: ['getProducts']
+      });
+    },
+    onError: () => {
+      alert('상품이 삭제에 실패하였습니다');
+    }
   });
 
   /** edit 버튼 클릭 시 */
@@ -59,6 +74,13 @@ const MainPage = () => {
         images: item.Images.map(image => image.src)
       });
     }
+  };
+
+  const onClickDelete = (targetId: number) => {
+    if (!productList) {
+      return;
+    }
+    removeProduct(targetId);
   };
   
   return (
@@ -107,7 +129,9 @@ const MainPage = () => {
                   <EditIcon sx={{ fontSize: 20, color: 'white' }} />
                     Edit
                 </button>
-                <button className="delete-btn">
+                <button
+                  onClick={() => onClickDelete(item.id)}
+                  className="delete-btn">
                   <DeleteIcon sx={{ fontSize: 20, color: 'white' }} />
                     Delete
                 </button>

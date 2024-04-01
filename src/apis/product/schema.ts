@@ -25,3 +25,6 @@ export type PatchProductReq = ProductType & {
   sizes: string[];
 };
 export type PatchProductRes = string;
+
+export type RemoveProductReq = number;
+export type RemoveProductRes = string;
