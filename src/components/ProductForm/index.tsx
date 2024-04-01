@@ -93,17 +93,18 @@ const ProductForm = ({
       [e.target.name]: e.target.value
     });
   };
+  console.log('inputVal',inputVal);
   
   useEffect(() => {
     if (isSuccess) {
       setInputVal({
-        id: item?.id || -1,
-        productName: item?.productName || '',
-        price: item?.price || 0,
-        sizes: item?.sizes || [],
-        images: item?.images || [],
-        stock: item?.stock || 0,
-        sex: item?.sex === 0 ? 0 : item?.sex || -1
+        id: -1,
+        productName: '',
+        price: 0,
+        sizes: [],
+        images: [],
+        stock: 0,
+        sex: -1
       });
     }
   }, [isSuccess]);
@@ -186,7 +187,7 @@ const ProductForm = ({
                 type="radio" 
                 name="sex"
                 value={0}
-                defaultChecked={inputVal.sex === 0}
+                checked = {inputVal.sex === 0}
                 onChange={onChangeInput}
               />
             </label>
@@ -197,7 +198,7 @@ const ProductForm = ({
                 type="radio" 
                 name="sex"
                 value={1}
-                defaultChecked={inputVal.sex === 1}
+                checked = {inputVal.sex === 1}
                 onChange={onChangeInput}
               />
             </label>
