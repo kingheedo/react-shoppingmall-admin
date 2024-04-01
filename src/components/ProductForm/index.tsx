@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import './index.scss';
 import classNames from 'classnames';
@@ -19,11 +19,13 @@ const sizeList = ['SM', 'M', 'L', 'XL'];
 
 interface IProductFormProps{
   item?: InputValType
+  isSuccess: boolean;
   onSumbit: (data: PatchProductReq & AddProductReq) => void;
 }
 
 const ProductForm = ({
   item,
+  isSuccess,
   onSumbit
 }: IProductFormProps) => {
   const [inputVal, setInputVal] = useState<InputValType>({
@@ -42,11 +44,15 @@ const ProductForm = ({
   /** 폼 제출시 */
   const handleOnSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('handleOnSubmit');
+    
     if (!inputVal.productName 
       || !inputVal.price 
       || inputVal.sizes.length === 0 
       || inputVal.images.length === 0 
-      || inputVal.stock === 0) {
+      || inputVal.stock === 0
+      || inputVal.stock === -1
+    ) {
       return;
     }
     /** props의 submit 함수 실행 */
@@ -73,14 +79,34 @@ const ProductForm = ({
       });
       
       return;
-    } 
+    }
+    if (e.target.name === 'sex') {
+      setInputVal({
+        ...inputVal,
+        sex: Number(e.target.value)
+      });
+
+      return;
+    }
     setInputVal({
       ...inputVal,
       [e.target.name]: e.target.value
     });
   };
   
-  console.log('inputVal',inputVal);
+  useEffect(() => {
+    if (isSuccess) {
+      setInputVal({
+        id: item?.id || -1,
+        productName: item?.productName || '',
+        price: item?.price || 0,
+        sizes: item?.sizes || [],
+        images: item?.images || [],
+        stock: item?.stock || 0,
+        sex: item?.sex === 0 ? 0 : item?.sex || -1
+      });
+    }
+  }, [isSuccess]);
   
   return (
     <div className="product-form">
