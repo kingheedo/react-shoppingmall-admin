@@ -57,7 +57,7 @@ const MainPage = () => {
       });
     },
     onError: () => {
-      alert('상품이 삭제에 실패하였습니다');
+      alert('상품 삭제에 실패하였습니다');
     }
   });
 
@@ -101,7 +101,7 @@ const MainPage = () => {
             <th>price</th>
             <th>stock</th>
             <th>sex</th>
-            <th>Edit</th>
+            <th>edit</th>
           </tr>
         </thead>
         <tbody>

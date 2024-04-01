@@ -31,8 +31,8 @@ const patchProduct = (data: PatchProductReq) => {
 };
 
 /** 상품 삭제 */
-const removeProduct = (data: RemoveProductReq) => {
-  return request.delete<RemoveProductRes>(`admin/product/${data}`).then(res => res.data);
+const removeProduct = (productId: RemoveProductReq) => {
+  return request.delete<RemoveProductRes>(`admin/product/${productId}`).then(res => res.data);
 };
 
 export default {

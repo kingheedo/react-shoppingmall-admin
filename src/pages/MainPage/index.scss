@@ -2,6 +2,8 @@
   table {
     table-layout: fixed;
     thead {
+      position: sticky;
+      top: 0;
       tr {
         background: #f3f3f3;
         th {
